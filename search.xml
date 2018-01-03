@@ -13,10 +13,12 @@
     <url>%2F2017%2F09%2F05%2F%E4%B8%BA%E5%8D%9A%E5%AE%A2%E6%B7%BB%E5%8A%A0%E4%BA%8C%E7%BA%A7%E5%9F%9F%E5%90%8D%2F</url>
     <content type="text"><![CDATA[背景成功在服务器中部署好hexo后发现一个问题：把文件部署到Apache根目录/var/www/html中，导致无法部署其他项目。因此我需要把它部署到其他目录，并且绑定一个二级域名。 申请二级域名及域名绑定 在阿里云的域名解析设置里，新增主机记录blog，记录类型为A，记录值仍指向主机的IP地址。完成后，当输入 blog.yestin.science即可指向服务器，余下的工作是在服务器中配置blog的解析规则。 Ubuntu中配置Apache2解析规则查阅了许多资料，整理如下： Ubuntu apache2服务器配置比较详细讲解了apache2的config文件结构 Ubuntu下Apache2多站点配置实例讲解简单明了的讲解了配置二级域名的方法首先看下apache2的配置文件结构1cd /etc/apache2 可以看下当前目录下的文件结构1tree -L 1 在apache2.conf中有対配置文件做详细的讲解 \# /etc/apache2/ \# |-- apache2.conf \# | `-- ports.conf \# |-- mods-enabled \# | |-- *.load \# | `-- *.conf \# |-- conf-enabled \# | `-- *.conf \# `-- sites-enabled \# `-- *.conf \# \# \# * apache2.conf is the main configuration file (this file). It puts the pieces \# together by including all remaining configuration files when starting up the \# web server. 主要起作用的配置项是在site-aviable中，而site-enable是其软链接。 linux的软链接类似于windows中的快捷方式。 参考Ubuntu下Apache2多站点配置实例讲解中的做法，我也在site-aviable中新建了配置文件blog.yestin.science，但是很快发现并不起作用。但是当我尝试把配置写入默认配置000-default.conf时，配置生效。 通过google找到这篇文章Why Apache virtual hosts on Ubuntu 14.04 is not working? Since Apache 2.4, each virtual host file should have the .conf extension. 因此，我必须将其命名为blog.yestin.science.conf。 另外，我也不必通过ln -s src des的方式建立软链接，而是通过命令a2ensite来完成。1a2ensite blog.yestin.science 如果没有正确的conf文件，会有错误Why does a2ensite give me the error “site does not exist”。 配置文件如下 &lt;VirtualHost *:80&gt; ServerAdmin yestin.tian@qq.com ServerName blog.yestin.science DocumentRoot &quot;/var/www/blog&quot; &lt;Directory &quot;/var/www/blog&quot;&gt; AllowOverride All &lt;/Directory&gt; ErrorLog ${APACHE_LOG_DIR}/blog.error.log CustomLog ${APACHE_LOG_DIR}/blog.access.log combined &lt;/VirtualHost&gt; 修改配置后，通过reload命令使其生效。 12service apache2 reloadservice apache2 restart 或者 12/etc/init.d/apache2 reload/etc/init.d/apache2 restart]]></content>
       <categories>
-        <category>博客搭建</category>
+        <category>搭建博客</category>
       </categories>
       <tags>
-        <tag>tag1</tag>
+        <tag>npm</tag>
+        <tag>hexo</tag>
+        <tag>github</tag>
       </tags>
   </entry>
   <entry>
