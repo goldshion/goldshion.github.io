@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[前端的数据MOCK]]></title>
+    <url>%2F2017%2F09%2F20%2F%E5%89%8D%E7%AB%AF%E7%9A%84%E6%95%B0%E6%8D%AEMOCK%2F</url>
+    <content type="text"><![CDATA[背景项目中前端对后台数据依赖严重，尤其是权限校验不过后连首页都无法进入，严重影响debug和bugfix的流程。为了前后端分离，前端可以独自运行，引入数据MOCK非常重要。研究了MOCK数据方式，比较著名的开源库有Mock.js和Json Server。 Mock.jsMock.js是国人写的mock库，运用的也比较多。一开始打算使用该库，但是有个致命的缺陷，和现系统的fetch请求方式不兼容。因此该方案只能放弃。 json-serverjson-server是非常有名的mock&nbsp;server，截止使用时有25,420个star。server是express写的node服务，使用非常方便，只用配置json文件，起个服务就能使用。而在项目中使用json-server的难点在于，项目中使用代理服务，如何将请求代理到mock server中，以及如何处理定制的route请求问题。 代理到mock中 目前系统中使用了代理服务器，如请求统一发到localhost:8080,然后再通过代理，发到msit.com 1234567Object.keys(proxyTable).forEach(function (context) &#123; var options = proxyTable[context] if (typeof options === &apos;string&apos;) &#123; options = &#123; target: options &#125; &#125; app.use(proxyMiddleware(options.filter || context, options))&#125;) 通过中间件http-proxy-middleware实现代理转发。1var proxyMiddleware = require(&apos;http-proxy-middleware&apos;) 因为插件会遍历proxyTable,这里只需要增加一个mock的proxyTable，然后通过环境变量来判断使用哪个proxyTable即可。 增加proxyTable:123456789proxyTable: &#123; &apos;/mock&apos;: &#123; target: &apos;http://localhost:5000&apos;, changeOrigin: true, pathRewrite: &#123; &apos;^/mock&apos;: &apos;/mock&apos; &#125; &#125;&#125; 在npm run mock时候设置环境变量，修改package.json1&quot;mock&quot;: &quot;cross-env NODE_ENV=mock node build/dev-server.js&quot; 其中cross-env是跨平台设置环境变量的插件，在Mac上表现为export，在windows上表现为set。 最后在dev-server.js中根据环境变量来设置不同的proxyTable：123456var proxyTable = &#123;&#125;if (process.env.NODE_ENV === &apos;mock&apos;) &#123; proxyTable = config.mock.proxyTable&#125; else &#123; proxyTable = config.dev.proxyTable&#125; 这样当运行npm run mock时，即将本地请求代理到了http://localhost:5000。下面将启动mock server。 json-server 的配置json-server的启动有两种形式：CLI和Module。因为我要对json-server进行诸多配置，在这里我使用的是module形式。主要解决的痛点是：在RESTFUL API中POST是向server端提交数据，在json-server中，POST请求不止是向服务端请求数据，而且会向其插入数据，因此我对POST请求进行了拦截并替换成了GET请求。另外还有端口配置及重定向等设置。12345678910111213141516171819202122232425// server.jsconst jsonServer = require(&apos;json-server&apos;)const server = jsonServer.create()const path = require(&apos;path&apos;)console.log(__dirname)const router = jsonServer.router(path.join(__dirname, &apos;mock.json&apos;))const middlewares = jsonServer.defaults()const port = 5000server.use(middlewares)server.use(jsonServer.bodyParser)server.use(function (req, res, next) &#123; if (req.method === &apos;POST&apos;) &#123; req.method = &apos;GET&apos; req.query = req.body &#125; next()&#125;)server.use(&apos;/auth/banma&apos;, function (req, res) &#123; res.redirect(&apos;/auth&apos;)&#125;)server.use(router)server.listen(port, () =&gt; &#123; console.log(&apos;JSON Server is running at: &apos; + port)&#125;) 其中，path.join(__dirname, &#39;mock.json&#39;)是为了能在任何路径下定位到mock.json，默认的文件路径是启动node的路径。_dirname是json文件所在的绝对路径。设置后就可以在其他目录运行node src/mock/server.js并能正确解析json文件了。对于二级目录的请求，可以参考这里。]]></content>
+      <categories>
+        <category>Mock</category>
+      </categories>
+  </entry>
+  <entry>
+    <title><![CDATA[为博客添加二级域名]]></title>
+    <url>%2F2017%2F09%2F05%2F%E4%B8%BA%E5%8D%9A%E5%AE%A2%E6%B7%BB%E5%8A%A0%E4%BA%8C%E7%BA%A7%E5%9F%9F%E5%90%8D%2F</url>
+    <content type="text"><![CDATA[背景成功在服务器中部署好hexo后发现一个问题：把文件部署到Apache根目录/var/www/html中，导致无法部署其他项目。因此我需要把它部署到其他目录，并且绑定一个二级域名。 申请二级域名及域名绑定 在阿里云的域名解析设置里，新增主机记录blog，记录类型为A，记录值仍指向主机的IP地址。完成后，当输入 blog.yestin.science即可指向服务器，余下的工作是在服务器中配置blog的解析规则。 Ubuntu中配置Apache2解析规则查阅了许多资料，整理如下： Ubuntu apache2服务器配置比较详细讲解了apache2的config文件结构 Ubuntu下Apache2多站点配置实例讲解简单明了的讲解了配置二级域名的方法首先看下apache2的配置文件结构1cd /etc/apache2 可以看下当前目录下的文件结构1tree -L 1 在apache2.conf中有対配置文件做详细的讲解 \# /etc/apache2/ \# |-- apache2.conf \# | `-- ports.conf \# |-- mods-enabled \# | |-- *.load \# | `-- *.conf \# |-- conf-enabled \# | `-- *.conf \# `-- sites-enabled \# `-- *.conf \# \# \# * apache2.conf is the main configuration file (this file). It puts the pieces \# together by including all remaining configuration files when starting up the \# web server. 主要起作用的配置项是在site-aviable中，而site-enable是其软链接。 linux的软链接类似于windows中的快捷方式。 参考Ubuntu下Apache2多站点配置实例讲解中的做法，我也在site-aviable中新建了配置文件blog.yestin.science，但是很快发现并不起作用。但是当我尝试把配置写入默认配置000-default.conf时，配置生效。 通过google找到这篇文章Why Apache virtual hosts on Ubuntu 14.04 is not working? Since Apache 2.4, each virtual host file should have the .conf extension. 因此，我必须将其命名为blog.yestin.science.conf。 另外，我也不必通过ln -s src des的方式建立软链接，而是通过命令a2ensite来完成。1a2ensite blog.yestin.science 如果没有正确的conf文件，会有错误Why does a2ensite give me the error “site does not exist”。 配置文件如下 &lt;VirtualHost *:80&gt; ServerAdmin yestin.tian@qq.com ServerName blog.yestin.science DocumentRoot &quot;/var/www/blog&quot; &lt;Directory &quot;/var/www/blog&quot;&gt; AllowOverride All &lt;/Directory&gt; ErrorLog ${APACHE_LOG_DIR}/blog.error.log CustomLog ${APACHE_LOG_DIR}/blog.access.log combined &lt;/VirtualHost&gt; 修改配置后，通过reload命令使其生效。 12service apache2 reloadservice apache2 restart 或者 12/etc/init.d/apache2 reload/etc/init.d/apache2 restart]]></content>
+      <categories>
+        <category>博客搭建</category>
+      </categories>
+      <tags>
+        <tag>tag1</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[欢迎来到我的博客]]></title>
+    <url>%2F2017%2F09%2F05%2F%E6%AC%A2%E8%BF%8E%E6%9D%A5%E5%88%B0%E6%88%91%E7%9A%84%E5%8D%9A%E5%AE%A2%2F</url>
+    <content type="text"></content>
+  </entry>
+</search>
