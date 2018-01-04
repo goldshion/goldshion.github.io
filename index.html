@@ -356,7 +356,19 @@
             
 
             
+              <span class="post-meta-divider">|</span>
+            
 
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-01-04T17:50:13+08:00">
+                2018-01-04
+              </time>
             
           </span>
 
@@ -411,32 +423,18 @@
 
       
         
-          
-            <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>项目中前端对后台数据依赖严重，尤其是权限校验不过后连首页都无法进入，严重影响debug和bugfix的流程。为了前后端分离，前端可以独自运行，引入数据MOCK非常重要。研究了MOCK数据方式，比较著名的开源库有Mock.js和Json Server。</p>
+          <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>项目中前端对后台数据依赖严重，尤其是权限校验不过后连首页都无法进入，严重影响debug和bugfix的流程。为了前后端分离，前端可以独自运行，引入数据MOCK非常重要。研究了MOCK数据方式，比较著名的开源库有Mock.js和Json Server。</p>
 <ol>
 <li><p>Mock.js<br><a href="https://github.com/nuysoft/Mock/wiki/Getting-Started" target="_blank" rel="external">Mock.js</a>是国人写的mock库，运用的也比较多。一开始打算使用该库，但是有个致命的缺陷，和现系统的fetch请求方式<a href="https://github.com/nuysoft/Mock/issues/163" target="_blank" rel="external">不兼容</a>。因此该方案只能放弃。</p>
 </li>
 <li><p>json-server<br><a href="https://github.com/typicode/json-server" target="_blank" rel="external">json-server</a>是非常有名的mock&nbsp;server，截止使用时有25,420个star。server是express写的node服务，使用非常方便，只用配置json文件，起个服务就能使用。而在项目中使用json-server的难点在于，项目中使用代理服务，如何将请求代理到mock server中，以及如何处理定制的route请求问题。</p>
-</li>
-</ol>
-<ul>
-<li><p>代理到mock中  </p>
-<p>目前系统中使用了代理服务器，如请求统一发到<code>localhost:8080</code>,然后再通过代理，发到<code>msit.com</code>  </p>
-</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.keys(proxyTable).forEach(<span class="function"><span class="keyword">function</span> (<span class="params">context</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> options = proxyTable[context]</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">typeof</span> options === <span class="string">'string'</span>) &#123;</div><div class="line">	options = &#123; <span class="attr">target</span>: options &#125;</div><div class="line">	&#125;</div><div class="line">	app.use(proxyMiddleware(options.filter || context, options))</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<p>　　通过中间件<code>http-proxy-middleware</code>实现代理转发。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> proxyMiddleware = <span class="built_in">require</span>(<span class="string">'http-proxy-middleware'</span>)</div></pre></td></tr></table></figure></p>
-<p>　　因为插件会遍历proxyTable,这里只需要增加一个mock的proxyTable，然后通过环境变量来判断使用哪个proxyTable即可。<br>　　增加proxyTable:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">proxyTable: &#123;</div><div class="line">      <span class="string">'/mock'</span>: &#123;</div><div class="line">        target: <span class="string">'http://localhost:5000'</span>,</div><div class="line">        changeOrigin: <span class="literal">true</span>,</div><div class="line">        pathRewrite: &#123;</div><div class="line">          <span class="string">'^/mock'</span>: <span class="string">'/mock'</span></div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>　　在<code>npm run mock</code>时候设置环境变量，修改package.json<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"mock"</span>: <span class="string">"cross-env NODE_ENV=mock node build/dev-server.js"</span></div></pre></td></tr></table></figure></p>
-<p>　　其中cross-env是跨平台设置环境变量的插件，在Mac上表现为<code>export</code>，在windows上表现为<code>set</code>。<br>　　最后在<code>dev-server.js</code>中根据环境变量来设置不同的proxyTable：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> proxyTable = &#123;&#125;</div><div class="line"><span class="keyword">if</span> (process.env.NODE_ENV === <span class="string">'mock'</span>) &#123;</div><div class="line">  proxyTable = config.mock.proxyTable</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">  proxyTable = config.dev.proxyTable</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>　　这样当运行<code>npm run mock</code>时，即将本地请求代理到了<code>http://localhost:5000</code>。下面将启动mock server。</p>
-<ul>
-<li>json-server 的配置<br>json-server的启动有两种形式：<a href="https://github.com/typicode/json-server" target="_blank" rel="external">CLI和Module</a>。因为我要对json-server进行诸多配置，在这里我使用的是module形式。主要解决的痛点是：在RESTFUL API中POST是向server端提交数据，在json-server中，POST请求不止是向服务端请求数据，而且会向其插入数据，因此我对POST请求进行了拦截并<a href="https://github.com/typicode/json-server/issues/453" target="_blank" rel="external">替换成了GET请求</a>。另外还有端口配置及重定向等设置。<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// server.js</span></div><div class="line"><span class="keyword">const</span> jsonServer = <span class="built_in">require</span>(<span class="string">'json-server'</span>)</div><div class="line"><span class="keyword">const</span> server = jsonServer.create()</div><div class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>)</div><div class="line"><span class="built_in">console</span>.log(__dirname)</div><div class="line"><span class="keyword">const</span> router = jsonServer.router(path.join(__dirname, <span class="string">'mock.json'</span>))</div><div class="line"><span class="keyword">const</span> middlewares = jsonServer.defaults()</div><div class="line"><span class="keyword">const</span> port = <span class="number">5000</span></div><div class="line"></div><div class="line">server.use(middlewares)</div><div class="line">server.use(jsonServer.bodyParser)</div><div class="line">server.use(<span class="function"><span class="keyword">function</span> (<span class="params">req, res, next</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (req.method === <span class="string">'POST'</span>) &#123;</div><div class="line">    req.method = <span class="string">'GET'</span></div><div class="line">    req.query = req.body</div><div class="line">  &#125;</div><div class="line">  next()</div><div class="line">&#125;)</div><div class="line">server.use(<span class="string">'/auth/banma'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</div><div class="line">  res.redirect(<span class="string">'/auth'</span>)</div><div class="line">&#125;)</div><div class="line">server.use(router)</div><div class="line">server.listen(port, () =&gt; &#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'JSON Server is running at: '</span> + port)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>其中，<code>path.join(__dirname, &#39;mock.json&#39;)</code>是为了能在任何路径下定位到<code>mock.json</code>，默认的文件路径是启动node的路径。<code>_dirname</code>是json文件所在的绝对路径。设置后就可以在其他目录运行<code>node src/mock/server.js</code>并能正确解析json文件了。<br>对于二级目录的请求，可以参考<a href="https://github.com/typicode/json-server/issues/91" target="_blank" rel="external">这里</a>。</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/09/20/前端的数据MOCK/" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -520,7 +518,19 @@
             
 
             
+              <span class="post-meta-divider">|</span>
+            
 
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-01-04T17:54:14+08:00">
+                2018-01-04
+              </time>
             
           </span>
 
@@ -575,67 +585,14 @@
 
       
         
-          
-            <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>成功在服务器中部署好hexo后发现一个问题：把文件部署到Apache根目录<code>/var/www/html</code>中，导致无法部署其他项目。<br>因此我需要把它部署到其他目录，并且绑定一个二级域名。  </p>
-<ul>
-<li>申请二级域名及域名绑定</li>
-</ul>
-<p><img src="http://ovt3itj15.bkt.clouddn.com/17-9-5/93329962.jpg" width="80%" align="center/"></p>
-<p>在阿里云的域名解析设置里，新增主机记录<code>blog</code>，记录类型为<code>A</code>，记录值仍指向主机的IP地址。完成后，当输入        <a href="http://blog.yestin.science">blog.yestin.science</a>即可指向服务器，余下的工作是在服务器中配置<code>blog</code>的解析规则。</p>
-<ul>
-<li>Ubuntu中配置Apache2解析规则<br>查阅了许多资料，整理如下：  </li>
-</ul>
-<ol>
-<li><a href="http://www.cnblogs.com/starof/p/4278370.html" target="_blank" rel="external">Ubuntu apache2服务器配置</a><br>比较详细讲解了apache2的config文件结构</li>
-<li><a href="http://blog.csdn.net/u010433704/article/details/50827772" target="_blank" rel="external">Ubuntu下Apache2多站点配置实例讲解</a><br>简单明了的讲解了配置二级域名的方法<br>首先看下apache2的配置文件结构<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cd /etc/apache2</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>可以看下当前目录下的文件结构<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tree -L 1</div></pre></td></tr></table></figure></p>
-<p>在<code>apache2.conf</code>中有対配置文件做详细的讲解</p>
-<pre><code>\#       /etc/apache2/
-\#       |-- apache2.conf
-\#       |       `--  ports.conf
-\#       |-- mods-enabled
-\#       |       |-- *.load
-\#       |       `-- *.conf
-\#       |-- conf-enabled
-\#       |       `-- *.conf
-\#       `-- sites-enabled
-\#               `-- *.conf
-\#
-\#
-\# * apache2.conf is the main configuration file (this file). It puts the pieces
-\#   together by including all remaining configuration files when starting up the
-\#   web server.
-</code></pre><p>主要起作用的配置项是在<code>site-aviable</code>中，而<code>site-enable</code>是其软链接。</p>
-<blockquote>
-<p>linux的软链接类似于windows中的快捷方式。 </p>
-</blockquote>
-<p>参考<a href="http://blog.csdn.net/u010433704/article/details/50827772" target="_blank" rel="external">Ubuntu下Apache2多站点配置实例讲解</a>中的做法，我也在<code>site-aviable</code>中新建了配置文件<code>blog.yestin.science</code>，但是很快发现并不起作用。但是当我尝试把配置写入默认配置<code>000-default.conf</code>时，配置生效。  </p>
-<p>通过google找到这篇文章<a href="https://askubuntu.com/questions/450722/why-apache-virtual-hosts-on-ubuntu-14-04-is-not-working" target="_blank" rel="external">Why Apache virtual hosts on Ubuntu 14.04 is not working?</a></p>
-<blockquote>
-<p>Since Apache 2.4, each virtual host file should have the .conf extension.</p>
-</blockquote>
-<p>因此，我必须将其命名为<code>blog.yestin.science.conf</code>。</p>
-<p>另外，我也不必通过<code>ln -s src des</code>的方式建立软链接，而是通过命令<code>a2ensite</code>来完成。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">a2ensite blog.yestin.science</div></pre></td></tr></table></figure></p>
-<p>如果没有正确的conf文件，会有错误<a href="https://serverfault.com/questions/771467/why-does-a2ensite-give-me-the-error-site-does-not-exist" target="_blank" rel="external">Why does a2ensite give me the error “site does not exist”</a>。</p>
-<p>配置文件如下</p>
-<pre><code>&lt;VirtualHost *:80&gt;
-    ServerAdmin yestin.tian@qq.com
-    ServerName blog.yestin.science
-    DocumentRoot &quot;/var/www/blog&quot;
-    &lt;Directory &quot;/var/www/blog&quot;&gt;
-        AllowOverride All
-    &lt;/Directory&gt;
-    ErrorLog ${APACHE_LOG_DIR}/blog.error.log
-    CustomLog ${APACHE_LOG_DIR}/blog.access.log combined
-&lt;/VirtualHost&gt;
-</code></pre><p>修改配置后，通过<code>reload</code>命令使其生效。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">service apache2 reload</div><div class="line">service apache2 restart</div></pre></td></tr></table></figure>
-<p>或者  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/etc/init.d/apache2 reload</div><div class="line">/etc/init.d/apache2 restart</div></pre></td></tr></table></figure>
-
-          
+          <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>成功在服务器中部署好hexo后发现一个问题：把文件部署到Apache根目录<code>/var/www/html</code>中，导致无法部署其他项目。<br>因此我需要把它部署到其他目录，并且绑定一个二级域名。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/09/05/为博客添加二级域名/" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -719,7 +676,19 @@
             
 
             
+              <span class="post-meta-divider">|</span>
+            
 
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-09-05T11:20:17+08:00">
+                2017-09-05
+              </time>
             
           </span>
 
@@ -1402,6 +1371,28 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
 
   
 

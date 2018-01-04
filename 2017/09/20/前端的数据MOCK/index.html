@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="田原的技术博客">
 <meta property="og:description" content="背景项目中前端对后台数据依赖严重，尤其是权限校验不过后连首页都无法进入，严重影响debug和bugfix的流程。为了前后端分离，前端可以独自运行，引入数据MOCK非常重要。研究了MOCK数据方式，比较著名的开源库有Mock.js和Json Server。  Mock.jsMock.js是国人写的mock库，运用的也比较多。一开始打算使用该库，但是有个致命的缺陷，和现系统的fetch请求方式不兼容。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-04T07:44:55.289Z">
+<meta property="og:updated_time" content="2018-01-04T09:50:13.764Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="前端的数据MOCK">
 <meta name="twitter:description" content="背景项目中前端对后台数据依赖严重，尤其是权限校验不过后连首页都无法进入，严重影响debug和bugfix的流程。为了前后端分离，前端可以独自运行，引入数据MOCK非常重要。研究了MOCK数据方式，比较著名的开源库有Mock.js和Json Server。  Mock.jsMock.js是国人写的mock库，运用的也比较多。一开始打算使用该库，但是有个致命的缺陷，和现系统的fetch请求方式不兼容。">
@@ -357,7 +357,19 @@
             
 
             
+              <span class="post-meta-divider">|</span>
+            
 
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-01-04T17:50:13+08:00">
+                2018-01-04
+              </time>
             
           </span>
 
@@ -416,7 +428,7 @@
 <li><p>Mock.js<br><a href="https://github.com/nuysoft/Mock/wiki/Getting-Started" target="_blank" rel="external">Mock.js</a>是国人写的mock库，运用的也比较多。一开始打算使用该库，但是有个致命的缺陷，和现系统的fetch请求方式<a href="https://github.com/nuysoft/Mock/issues/163" target="_blank" rel="external">不兼容</a>。因此该方案只能放弃。</p>
 </li>
 <li><p>json-server<br><a href="https://github.com/typicode/json-server" target="_blank" rel="external">json-server</a>是非常有名的mock&nbsp;server，截止使用时有25,420个star。server是express写的node服务，使用非常方便，只用配置json文件，起个服务就能使用。而在项目中使用json-server的难点在于，项目中使用代理服务，如何将请求代理到mock server中，以及如何处理定制的route请求问题。</p>
-</li>
+<a id="more"></a></li>
 </ol>
 <ul>
 <li><p>代理到mock中  </p>
@@ -1131,6 +1143,28 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
 
   
 
