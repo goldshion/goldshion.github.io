@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -100,7 +100,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="为博客添加二级域名">
 <meta property="og:url" content="https://tobyaries.github.io/2017/09/05/为博客添加二级域名/index.html">
-<meta property="og:site_name" content="Shion的技术博客">
+<meta property="og:site_name" content="Shion">
 <meta property="og:description" content="背景成功在服务器中部署好hexo后发现一个问题：把文件部署到Apache根目录/var/www/html中，导致无法部署其他项目。因此我需要把它部署到其他目录，并且绑定一个二级域名。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ovt3itj15.bkt.clouddn.com/17-9-5/93329962.jpg">
@@ -116,9 +116,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Mist',
     version: '5.1.2',
-    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":true,"onmobile":true},
     fancybox: true,
     tabs: true,
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
@@ -144,7 +144,7 @@
 
 
 
-  <title>为博客添加二级域名 | Shion的技术博客</title>
+  <title>为博客添加二级域名 | Shion</title>
   
 
 
@@ -168,18 +168,18 @@
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
+  <div class="site-meta custom-logo">
     
 
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Shion的技术博客</span>
+        <span class="site-title">Shion</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
       
-        <p class="site-subtitle">A Blog Of Shion</p>
+        <p class="site-subtitle">站在巨人的肩膀上，传递力量。</p>
       
   </div>
 
@@ -209,32 +209,12 @@
         </li>
       
         
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
+        <li class="menu-item menu-item-mock">
+          <a href="/categories/Mock/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-mock"></i> <br />
             
-            关于
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            分类
+            mock
           </a>
         </li>
       
@@ -245,6 +225,16 @@
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
           </a>
         </li>
       
@@ -320,11 +310,11 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Shion">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Shion的技术博客">
+      <meta itemprop="name" content="Shion">
     </span>
 
     
@@ -567,6 +557,8 @@
 
   <aside id="sidebar" class="sidebar">
     
+      <div id="sidebar-dimmer"></div>
+    
     <div class="sidebar-inner">
 
       
@@ -586,7 +578,7 @@
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           
             <img class="site-author-image" itemprop="image"
-              src="/uploads/avatar.png"
+              src="/images/avatar.jpg"
               alt="Shion" />
           
             <p class="site-author-name" itemprop="name">Shion</p>
@@ -728,6 +720,8 @@
       <div class="back-to-top">
         <i class="fa fa-arrow-up"></i>
         
+          <span id="scrollpercent"><span>0</span>%</span>
+        
       </div>
     
 
@@ -792,13 +786,6 @@
 
   
   
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
-
-
 
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
