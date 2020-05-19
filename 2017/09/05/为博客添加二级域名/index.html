@@ -99,12 +99,12 @@
 <meta name="keywords" content="npm,hexo,github">
 <meta property="og:type" content="article">
 <meta property="og:title" content="为博客添加二级域名">
-<meta property="og:url" content="http://blog.yestin.science/2017/09/05/为博客添加二级域名/index.html">
-<meta property="og:site_name" content="田原的技术博客">
+<meta property="og:url" content="https://tobyaries.github.io/2017/09/05/为博客添加二级域名/index.html">
+<meta property="og:site_name" content="Shion的技术博客">
 <meta property="og:description" content="背景成功在服务器中部署好hexo后发现一个问题：把文件部署到Apache根目录/var/www/html中，导致无法部署其他项目。因此我需要把它部署到其他目录，并且绑定一个二级域名。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ovt3itj15.bkt.clouddn.com/17-9-5/93329962.jpg">
-<meta property="og:updated_time" content="2018-01-04T09:54:14.241Z">
+<meta property="og:updated_time" content="2018-01-04T09:54:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="为博客添加二级域名">
 <meta name="twitter:description" content="背景成功在服务器中部署好hexo后发现一个问题：把文件部署到Apache根目录/var/www/html中，导致无法部署其他项目。因此我需要把它部署到其他目录，并且绑定一个二级域名。">
@@ -118,7 +118,7 @@
     root: '/',
     scheme: 'Pisces',
     version: '5.1.2',
-    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
     tabs: true,
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
@@ -138,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="http://blog.yestin.science/2017/09/05/为博客添加二级域名/"/>
+  <link rel="canonical" href="https://tobyaries.github.io/2017/09/05/为博客添加二级域名/"/>
 
 
 
 
 
-  <title>为博客添加二级域名 | 田原的技术博客</title>
+  <title>为博客添加二级域名 | Shion的技术博客</title>
   
 
 
@@ -163,7 +163,7 @@
     
   
 
-  <div class="container sidebar-position-right page-post-detail">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -174,12 +174,12 @@
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">田原的技术博客</span>
+        <span class="site-title">Shion的技术博客</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
       
-        <p class="site-subtitle">A Blog Of Yestin</p>
+        <p class="site-subtitle">A Blog Of Shion</p>
       
   </div>
 
@@ -245,16 +245,6 @@
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-commonweal">
-          <a href="/404/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
-            
-            公益404
           </a>
         </li>
       
@@ -325,16 +315,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.yestin.science/2017/09/05/为博客添加二级域名/">
+    <link itemprop="mainEntityOfPage" href="https://tobyaries.github.io/2017/09/05/为博客添加二级域名/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Yestin Tian">
+      <meta itemprop="name" content="Shion">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="田原的技术博客">
+      <meta itemprop="name" content="Shion的技术博客">
     </span>
 
     
@@ -431,7 +421,7 @@
 <li>申请二级域名及域名绑定</li>
 </ul>
 <p><img src="http://ovt3itj15.bkt.clouddn.com/17-9-5/93329962.jpg" width="80%" align="center/"></p>
-<p>在阿里云的域名解析设置里，新增主机记录<code>blog</code>，记录类型为<code>A</code>，记录值仍指向主机的IP地址。完成后，当输入        <a href="http://blog.yestin.science">blog.yestin.science</a>即可指向服务器，余下的工作是在服务器中配置<code>blog</code>的解析规则。</p>
+<p>在阿里云的域名解析设置里，新增主机记录<code>blog</code>，记录类型为<code>A</code>，记录值仍指向主机的IP地址。完成后，当输入        <a href="http://blog.yestin.science" target="_blank" rel="external">blog.yestin.science</a>即可指向服务器，余下的工作是在服务器中配置<code>blog</code>的解析规则。</p>
 <ul>
 <li>Ubuntu中配置Apache2解析规则<br>查阅了许多资料，整理如下：  </li>
 </ul>
@@ -597,9 +587,9 @@
           
             <img class="site-author-image" itemprop="image"
               src="/uploads/avatar.png"
-              alt="Yestin Tian" />
+              alt="Shion" />
           
-            <p class="site-author-name" itemprop="name">Yestin Tian</p>
+            <p class="site-author-name" itemprop="name">Shion</p>
             <p class="site-description motion-element" itemprop="description"></p>
         </div>
 
@@ -714,11 +704,11 @@
         <div class="copyright" >
   
   &copy;  2017 &mdash; 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">Yestin Tian</span>
+  <span class="author" itemprop="copyrightHolder">Shion</span>
 
   
 </div>
@@ -764,16 +754,11 @@
 
 
 
-  
-  
 
 
 
 
 
-
-
-  
 
 
 
@@ -794,15 +779,6 @@
 
   
   <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-  
-  <script type="text/javascript" src="/lib/three/three.min.js"></script>
-
-  
-  <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
-
-  
-  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
 
 
   
